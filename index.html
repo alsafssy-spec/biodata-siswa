@@ -116,9 +116,7 @@ const TAMPILKAN = {
   jenisKelamin: true,
   tanggalLahir: true,
   alamat: true,
-  foto_url: true,
-  nama_guru: true,
-  mapel: true
+  foto_url: true
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -193,8 +191,6 @@ function buatKartu(s) {
   if (TAMPILKAN.jenisKelamin) tambahBaris(rincian, "Jenis kelamin", s.jenis_kelamin);
   if (TAMPILKAN.tanggalLahir) tambahBaris(rincian, "Tanggal lahir", formatTanggal(s.tanggal_lahir));
   if (TAMPILKAN.alamat) tambahBaris(rincian, "Alamat", s.alamat);
-  if (TAMPILKAN.nama_guru) tambahBaris(rincian, "nama_guru" s.nama_guru);
-  if (TAMPILKAN.mapel) tambahBaris(rincian, "mapel" s.mapel);
   
   isi.appendChild(rincian);
   kartu.appendChild(isi);
