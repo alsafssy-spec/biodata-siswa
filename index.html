@@ -3,71 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Biodata Siswa & Guru - Oranye</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+<title>Teknik Komputer Jaringan</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--orange:#f97316;--orange-soft:#ffedd5;--orange-dark:#c2410c}
+:root{--orange:#f97316;--orange-soft:#ffedd5;--orange-dark:#9a3412}
 *{box-sizing:border-box}
-body{margin:0;background:#f1f5f9;font-family:"Plus Jakarta Sans",Arial,sans-serif}
-.wadah{max-width:480px;margin:0 auto;padding:14px}
-.kartu{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid #fed7aa;margin-bottom:20px}
-.top{height:88px;background:var(--orange);position:relative}
-.foto{width:88px;height:88px;border-radius:50%;background:var(--orange-soft);border:4px solid #fff;color:var(--orange);display:grid;place-items:center;font-weight:800;font-size:26px;position:absolute;left:50%;bottom:-44px;transform:translateX(-50%);overflow:hidden}
+body{margin:0;font-family:"Plus Jakarta Sans",Arial,sans-serif;background:#eef2f7;color:#0f172a}
+.wadah{max-width:480px;margin:0 auto;padding:18px 14px 40px}
+h1{margin:0;font-size:34px;line-height:1.1;font-weight:800}
+.sub{color:#64748b;margin:8px 0 14px;font-size:16px}
+.btn-tambah{background:var(--orange);color:#fff;border:none;border-radius:14px;padding:12px 18px;font-weight:700;font-size:15px;cursor:pointer}
+.kontrol{display:flex;flex-direction:column;gap:10px;margin:18px 0 10px}
+.kontrol input,.kontrol select{width:100%;padding:14px 16px;border:1px solid #cbd5e1;border-radius:14px;background:#fff;font-size:15px}
+.jumlah{color:#64748b;font-size:14px;margin:6px 0 14px}
+.kartu{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06);border:1px solid #ffe4cc;margin-bottom:20px}
+.pita{height:82px;background:var(--orange);position:relative}
+.foto{width:82px;height:82px;border-radius:50%;background:var(--orange-soft);border:4px solid #fff;color:var(--orange);display:grid;place-items:center;font-weight:800;font-size:24px;position:absolute;left:50%;bottom:-41px;transform:translateX(-50%);overflow:hidden}
 .foto img{width:100%;height:100%;object-fit:cover}
-.body{padding:54px 16px 12px;text-align:center}
-.nama{font-size:19px;font-weight:800;color:#0f172a;margin:0}
-.nip{font-size:13px;color:#64748b;margin:4px 0 14px}
-.row{display:flex;justify-content:space-between;border-top:1px solid #fff1e6;padding:12px 4px;font-size:14px;text-align:left}
-.row span:first-child{color:#64748b}
-.row span:last-child{font-weight:700;color:#1e293b;text-align:right}
+.isi{padding:50px 18px 6px;text-align:center}
+.nama{margin:0;font-size:19px;font-weight:800}
+.nis{margin:4px 0 16px;color:#64748b;font-size:14px}
+.baris{display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;padding:13px 2px;font-size:14px;text-align:left}
+.baris span:first-child{color:#64748b}
+.baris span:last-child{font-weight:700;text-align:right;max-width:65%}
 </style>
 </head>
 <body>
 <div class="wadah">
-<div id="list"></div>
+<h1>Teknik Komputer<br>Jaringan</h1>
+<p class="sub">Cari berdasarkan role</p>
+<button class="btn-tambah">+ Tambah Data</button>
+
+<div class="kontrol">
+<input id="cari" type="search" placeholder="Cari nama, NIS, atau NIP">
+<select id="filterRole">
+<option value="">Semua (Guru / Siswa)</option>
+<option value="Siswa">Siswa</option>
+<option value="Guru">Guru</option>
+</select>
+<select id="filterMapel">
+<option value="">Semua Kelas / Mapel</option>
+<option value="XI TKJ 1">XI TKJ 1</option>
+<option value="Pemrograman">Pemrograman</option>
+</select>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script>
-const supabaseClient = supabase.createClient(
-  "https://jwpzywmbzfsulqwjfvlk.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cHp5d21iemZzdWxxd2pmdmxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMjg4MjUsImV4cCI6MjEwODkwNDgyNX0.nwkU8wtrnCsJeHPLIhuxZ66Y8lxuenhTyFzUE_7rKVw"
-);
+<p id="jumlah" class="jumlah">2 dari 2 data</p>
+<div id="daftar"></div>
+</div>
 
-async function load(){
-  const {data} = await supabaseClient.from("siswa").select("*").order("nama");
-  document.getElementById("list").innerHTML = (data||[]).map(d=>{
-    const isGuru = String(d.role||"").toLowerCase() === "guru";
-    const initials = d.nama.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+<script>
+const dataAwal = [
+  {
+    role:"Siswa",
+    nama:"Fitri Septiyani",
+    nis:"9012345678",
+    kelas:"XI TKJ 1",
+    jenis_kelamin:"Perempuan",
+    tanggal_lahir:"2 Januari 2010",
+    alamat:"Bandung",
+    foto:"https://i.pravatar.cc/200?img=5"
+  },
+  {
+    role:"Guru",
+    nama:"Pak Kumis",
+    nis:"123567890",
+    nip:"123567890",
+    jurusan:"Rekayasa Perangkat Lunak",
+    mapel:"Peminatan Coding",
+    inisial:"PK"
+  }
+];
+
+let semua = [...dataAwal];
+const daftar = document.getElementById("daftar");
+const jumlah = document.getElementById("jumlah");
+const cari = document.getElementById("cari");
+const filterRole = document.getElementById("filterRole");
+const filterMapel = document.getElementById("filterMapel");
+
+function tampil(){
+  const q = cari.value.toLowerCase();
+  const r = filterRole.value;
+  const m = filterMapel.value;
+  
+  const hasil = semua.filter(d=>{
+    const cocokQ = d.nama.toLowerCase().includes(q) || String(d.nis).includes(q);
+    const cocokR = !r || d.role === r;
+    const cocokM = !m || d.kelas === m || d.mapel === m;
+    return cocokQ && cocokR && cocokM;
+  });
+
+  jumlah.textContent = `${hasil.length} dari ${semua.length} data`;
+  daftar.innerHTML = "";
+
+  hasil.forEach(d=>{
+    const isGuru = d.role === "Guru";
+    const fotoInner = d.foto ? `<img src="${d.foto}">` : (d.inisial||d.nama.split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase());
     
+    let rows = "";
     if(isGuru){
-      return `
-      <div class="kartu">
-        <div class="top"><div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:initials}</div></div>
-        <div class="body">
-          <p class="nama">${d.nama}</p>
-          <p class="nip">NIP ${d.nis||d.nip||"-"}</p>
-          <div class="row"><span>Jurusan</span><span>${d.jurusan||d.kelas||"Teknik Komputer Jaringan"}</span></div>
-          <div class="row"><span>Mapel</span><span>${d.mapel||"-"}</span></div>
-        </div>
-      </div>`;
-    }else{
-      return `
-      <div class="kartu">
-        <div class="top"><div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:initials}</div></div>
-        <div class="body">
-          <p class="nama">${d.nama}</p>
-          <p class="nip">NIS ${d.nis||"-"}</p>
-          <div class="row"><span>Kelas</span><span>${d.kelas||"-"}</span></div>
-          <div class="row"><span>Jenis kelamin</span><span>${d.jenis_kelamin||"-"}</span></div>
-          <div class="row"><span>Tanggal lahir</span><span>${d.tanggal_lahir||"-"}</span></div>
-          <div class="row"><span>Alamat</span><span>${d.alamat||"-"}</span></div>
-        </div>
-      </div>`;
+      rows = `
+        <div class="baris"><span>Jurusan</span><span>${d.jurusan}</span></div>
+        <div class="baris"><span>Mapel</span><span>${d.mapel}</span></div>
+      `;
+    } else {
+      rows = `
+        <div class="baris"><span>Kelas</span><span>${d.kelas}</span></div>
+        <div class="baris"><span>Jenis kelamin</span><span>${d.jenis_kelamin}</span></div>
+        <div class="baris"><span>Tanggal lahir</span><span>${d.tanggal_lahir}</span></div>
+        <div class="baris"><span>Alamat</span><span>${d.alamat}</span></div>
+      `;
     }
-  }).join("");
+
+    daftar.innerHTML += `
+    <div class="kartu">
+      <div class="pita"><div class="foto">${fotoInner}</div></div>
+      <div class="isi">
+        <h2 class="nama">${d.nama}</h2>
+        <p class="nis">${isGuru?"NIP":"NIS"} ${d.nip||d.nis}</p>
+        ${rows}
+      </div>
+    </div>`;
+  });
 }
-load();
+
+cari.addEventListener("input",tampil);
+filterRole.addEventListener("change",tampil);
+filterMapel.addEventListener("change",tampil);
+tampil();
 </script>
 </body>
 </html>
