@@ -98,17 +98,10 @@ header p { margin: 0; color: var(--teks-redup); }
   </header>
   <div class="kontrol">
     <input id="cari" type="search" placeholder="Cari nama role" aria-label="Cari nama role">
-    <select id="filterrole" aria-label="Filterrole">
-      <option value="">semua guru dan siswa</option>
-      <option value="">siswa</option>
-      <option value="">guru</option>
-    </select>
-    <select id="filter kelas" aria-label="filter kelas">
+    <select id="filterkelas" aria-label="Filterkelas">
       <option value="">semua kelas</option>
     </select>
-    <select id="filter guru" aria-label="filter guru">
-      <option value="">semua guru</option>
-    </select>
+    
     
   </div>
   <p id="jumlah" class="jumlah" aria-live="polite"></p>
@@ -202,6 +195,8 @@ function buatKartu(s) {
   if (TAMPILKAN.jenisKelamin) tambahBaris(rincian, "Jenis kelamin", s.jenis_kelamin);
   if (TAMPILKAN.tanggalLahir) tambahBaris(rincian, "Tanggal lahir", formatTanggal(s.tanggal_lahir));
   if (TAMPILKAN.alamat) tambahBaris(rincian, "Alamat", s.alamat);
+  if (TAMPILKAN.nama_guru) tambahkanBaris(rincian,"nama_guru",s.nama_guru));
+  if (TAMPILKAN.mapel) tambahkanBaris(rincian,"mapel",s.mapel));
   
   isi.appendChild(rincian);
   kartu.appendChild(isi);
