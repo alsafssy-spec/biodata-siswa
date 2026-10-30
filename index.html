@@ -93,16 +93,14 @@ header p { margin: 0; color: var(--teks-redup); }
 <body>
 <div class="wadah">
   <header>
-    <h1>Teknik Jaringan Komputer</h1>
-    <p>Cari siswa berdasarkan role.</p>
+    <h1>Biodata Siswa</h1>
+    <p>Cari siswa berdasarkan nama atau NIS.</p>
   </header>
   <div class="kontrol">
-    <input id="cari" type="search" placeholder="Cari nama role" aria-label="Cari nama role">
-    <select id="filterkelas" aria-label="Filterkelas">
-      <option value="">semua kelas</option>
+    <input id="cari" type="search" placeholder="Cari nama atau NIS" aria-label="Cari nama atau NIS">
+    <select id="filterKelas" aria-label="Filter kelas">
+      <option value="">Semua kelas</option>
     </select>
-    
-    
   </div>
   <p id="jumlah" class="jumlah" aria-live="polite"></p>
   <main id="daftar" class="daftar"></main>
@@ -119,8 +117,8 @@ const TAMPILKAN = {
   tanggalLahir: true,
   alamat: true,
   foto_url: true,
-  mapel: true,
-  nama_guru: true
+  nama_guru: true,
+  mapel: true
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -195,8 +193,9 @@ function buatKartu(s) {
   if (TAMPILKAN.jenisKelamin) tambahBaris(rincian, "Jenis kelamin", s.jenis_kelamin);
   if (TAMPILKAN.tanggalLahir) tambahBaris(rincian, "Tanggal lahir", formatTanggal(s.tanggal_lahir));
   if (TAMPILKAN.alamat) tambahBaris(rincian, "Alamat", s.alamat);
-  if (TAMPILKAN.nama_guru) tambahkanBaris(rincian,"nama_guru",s.nama_guru));
-  if (TAMPILKAN.mapel) tambahkanBaris(rincian,"mapel",s.mapel));
+   if (TAMPILKAN.nama_guru) tambahBaris(rincian, "Nama_guru", formatTanggal(s.nama_guru));
+  if (TAMPILKAN.mapel) tambahBaris(rincian, "mapel", s.mapel);
+  
   
   isi.appendChild(rincian);
   kartu.appendChild(isi);
