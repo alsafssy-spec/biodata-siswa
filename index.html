@@ -3,77 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Biodata Oranye</title>
+<title>Biodata Siswa & Guru - Oranye</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
 <style>
+:root{--orange:#f97316;--orange-soft:#ffedd5;--orange-dark:#c2410c}
 *{box-sizing:border-box}
-body{margin:0;background:#f8fafc;font-family:Arial,sans-serif}
-.wadah{max-width:480px;margin:auto;padding:12px}
-.kartu{background:#fff;border-radius:22px;overflow:hidden;border:1px solid #fed7aa;box-shadow:0 4px 14px rgba(0,0,0,.06);margin-bottom:18px}
-.header-kartu{height:90px;background:#f97316}
-.isi{padding:0 18px 18px;text-align:center;margin-top:-45px}
-.foto{width:90px;height:90px;margin:0 auto;border-radius:50%;border:4px solid #fff;background:#ffedd5;color:#c2410c;display:grid;place-items:center;font-size:24px;font-weight:800;overflow:hidden}
+body{margin:0;background:#f1f5f9;font-family:"Plus Jakarta Sans",Arial,sans-serif}
+.wadah{max-width:480px;margin:0 auto;padding:14px}
+.kartu{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid #fed7aa;margin-bottom:20px}
+.top{height:88px;background:var(--orange);position:relative}
+.foto{width:88px;height:88px;border-radius:50%;background:var(--orange-soft);border:4px solid #fff;color:var(--orange);display:grid;place-items:center;font-weight:800;font-size:26px;position:absolute;left:50%;bottom:-44px;transform:translateX(-50%);overflow:hidden}
 .foto img{width:100%;height:100%;object-fit:cover}
-.badge{margin-top:10px;display:inline-block;background:#ffedd5;color:#c2410c;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
-.nama{font-size:19px;font-weight:800;margin:10px 0 2px;color:#0f172a}
-.nis{color:#64748b;font-size:14px;margin:0 0 14px}
-.baris{display:flex;justify-content:space-between;border-top:1px solid #ffedd5;padding:12px 0;font-size:14px;text-align:left}
-.baris span:first-child{color:#64748b}
-.baris span:last-child{font-weight:700;color:#0f172a;text-align:right;max-width:60%}
+.body{padding:54px 16px 12px;text-align:center}
+.nama{font-size:19px;font-weight:800;color:#0f172a;margin:0}
+.nip{font-size:13px;color:#64748b;margin:4px 0 14px}
+.row{display:flex;justify-content:space-between;border-top:1px solid #fff1e6;padding:12px 4px;font-size:14px;text-align:left}
+.row span:first-child{color:#64748b}
+.row span:last-child{font-weight:700;color:#1e293b;text-align:right}
 </style>
 </head>
 <body>
 <div class="wadah">
-<div id="daftar"></div>
+<div id="list"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-const db = supabase.createClient(
-"https://jwpzywmbzfsulqwjfvlk.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cHp5d21iemZzdWxxd2pmdmxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMjg4MjUsImV4cCI6MjEwODkwNDgyNX0.nwkU8wtrnCsJeHPLIhuxZ66Y8lxuenhTyFzUE_7rKVw"
+const supabaseClient = supabase.createClient(
+  "https://jwpzywmbzfsulqwjfvlk.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cHp5d21iemZzdWxxd2pmdmxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMjg4MjUsImV4cCI6MjEwODkwNDgyNX0.nwkU8wtrnCsJeHPLIhuxZ66Y8lxuenhTyFzUE_7rKVw"
 );
 
-async function muat(){
- const {data} = await db.from("siswa").select("*").order("nama");
- const semua = data||[];
- document.getElementById("daftar").innerHTML = semua.map(d=>{
-  const isGuru = String(d.role||"").toLowerCase() === "guru";
-  
-  // INI BEDANYA
-  if(isGuru){
-    // GURU = Jurusan + Mapel kayak foto Pak Joel
-    return `
-    <div class="kartu">
-      <div class="header-kartu"></div>
-      <div class="isi">
-        <div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:d.nama.substring(0,2).toUpperCase()}</div>
-        <span class="badge">GURU</span>
-        <div class="nama">${d.nama}</div>
-        <div class="nis">NIP ${d.nis||d.nip||"-"}</div>
-        <div class="baris"><span>Jurusan</span><span>${d.jurusan||"Teknik Komputer Jaringan"}</span></div>
-        <div class="baris"><span>Mapel</span><span>${d.mapel||"-"}</span></div>
-      </div>
-    </div>`;
-  } else {
-    // SISWA = 4 baris
-    return `
-    <div class="kartu">
-      <div class="header-kartu"></div>
-      <div class="isi">
-        <div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:d.nama.substring(0,2).toUpperCase()}</div>
-        <span class="badge">SISWA</span>
-        <div class="nama">${d.nama}</div>
-        <div class="nis">NIS ${d.nis||"-"}</div>
-        <div class="baris"><span>Kelas</span><span>${d.kelas||"-"}</span></div>
-        <div class="baris"><span>Jenis kelamin</span><span>${d.jenis_kelamin||"-"}</span></div>
-        <div class="baris"><span>Tanggal lahir</span><span>${d.tanggal_lahir||"-"}</span></div>
-        <div class="baris"><span>Alamat</span><span>${d.alamat||"-"}</span></div>
-      </div>
-    </div>`;
-  }
- }).join("");
+async function load(){
+  const {data} = await supabaseClient.from("siswa").select("*").order("nama");
+  document.getElementById("list").innerHTML = (data||[]).map(d=>{
+    const isGuru = String(d.role||"").toLowerCase() === "guru";
+    const initials = d.nama.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+    
+    if(isGuru){
+      return `
+      <div class="kartu">
+        <div class="top"><div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:initials}</div></div>
+        <div class="body">
+          <p class="nama">${d.nama}</p>
+          <p class="nip">NIP ${d.nis||d.nip||"-"}</p>
+          <div class="row"><span>Jurusan</span><span>${d.jurusan||d.kelas||"Teknik Komputer Jaringan"}</span></div>
+          <div class="row"><span>Mapel</span><span>${d.mapel||"-"}</span></div>
+        </div>
+      </div>`;
+    }else{
+      return `
+      <div class="kartu">
+        <div class="top"><div class="foto">${d.foto_url?`<img src="${d.foto_url}">`:initials}</div></div>
+        <div class="body">
+          <p class="nama">${d.nama}</p>
+          <p class="nip">NIS ${d.nis||"-"}</p>
+          <div class="row"><span>Kelas</span><span>${d.kelas||"-"}</span></div>
+          <div class="row"><span>Jenis kelamin</span><span>${d.jenis_kelamin||"-"}</span></div>
+          <div class="row"><span>Tanggal lahir</span><span>${d.tanggal_lahir||"-"}</span></div>
+          <div class="row"><span>Alamat</span><span>${d.alamat||"-"}</span></div>
+        </div>
+      </div>`;
+    }
+  }).join("");
 }
-muat();
+load();
 </script>
 </body>
 </html>
