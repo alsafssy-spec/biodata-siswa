@@ -93,8 +93,8 @@ header p { margin: 0; color: var(--teks-redup); }
 <body>
 <div class="wadah">
   <header>
-    <h1>Biodata Siswa</h1>
-    <p>Cari siswa berdasarkan nama atau NIS.</p>
+    <h1>Teknik jaringan komputer</h1>
+    <p>Cari siswa berdasarkan role.</p>
   </header>
   <div class="kontrol">
     <input id="cari" type="search" placeholder="Cari nama atau NIS" aria-label="Cari nama atau NIS">
@@ -116,7 +116,9 @@ const TAMPILKAN = {
   jenisKelamin: true,
   tanggalLahir: true,
   alamat: true,
-  foto_url: true
+  foto_url: true,
+  nama_guru: true,
+  mapel: true
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -131,7 +133,7 @@ async function muatData() {
   tampilkanPesan("Memuat data siswa...");
   const { data, error } = await db
     .from("siswa")
-    .select("nis, nama, kelas, jenis_kelamin, tanggal_lahir, alamat, foto_url")
+    .select("nis, nama, kelas, jenis_kelamin, tanggal_lahir, alamat, foto_url, nama_guru, mapel")
     .order("nama");
 
   if (error) {
@@ -191,6 +193,8 @@ function buatKartu(s) {
   if (TAMPILKAN.jenisKelamin) tambahBaris(rincian, "Jenis kelamin", s.jenis_kelamin);
   if (TAMPILKAN.tanggalLahir) tambahBaris(rincian, "Tanggal lahir", formatTanggal(s.tanggal_lahir));
   if (TAMPILKAN.alamat) tambahBaris(rincian, "Alamat", s.alamat);
+  if (TAMPILKAN.nama_guru) tambahBaris(rincian, "nama_guru", s.nama_guru);
+  if (TAMPILKAN.mapel) tambahBaris(rincian, "mapel', s.mapel);
   
   isi.appendChild(rincian);
   kartu.appendChild(isi);
