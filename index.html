@@ -117,7 +117,8 @@ const TAMPILKAN = {
   tanggalLahir: true,
   alamat: true,
   foto_url: true,
-  mapel: true
+  mapel: true,
+  nama_guru: true
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -132,7 +133,7 @@ async function muatData() {
   tampilkanPesan("Memuat data siswa...");
   const { data, error } = await db
     .from("siswa")
-    .select("nis, nama, kelas, jenis_kelamin, tanggal_lahir, alamat, foto_url")
+    .select("nis, nama, kelas, jenis_kelamin, tanggal_lahir, alamat, foto_url, nama_guru, mapel")
     .order("nama");
 
   if (error) {
